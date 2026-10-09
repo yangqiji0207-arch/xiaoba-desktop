@@ -1,0 +1,453 @@
+:root {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+  color: #153b49;
+  font-size: 13px;
+  font-synthesis: none;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: transparent;
+  overflow: hidden;
+}
+button,
+input,
+textarea {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+  color: inherit;
+  border: 0;
+  background: none;
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus {
+  outline: 2px solid #5c9bd5;
+  outline-offset: 3px;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+[hidden] {
+  display: none !important;
+}
+#app {
+  padding: 12px 16px 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+.panel {
+  width: 100%;
+  height: 483px;
+  background: #fcfcfa;
+  border: 1px solid #fff;
+  border-radius: 23px;
+  box-shadow: 0 12px 28px #193e5424;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+header {
+  height: 73px;
+  padding: 17px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #dceafa;
+  -webkit-app-region: drag;
+}
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #e7f2ff;
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  color: #619bd2;
+}
+.brand-mark img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+.brand strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+.brand p {
+  font-size: 10px;
+  color: #7f949b;
+  margin: 4px 0 0;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.brand i {
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+  background: #74a7d7;
+}
+.brand i.connected {
+  background: #5c9bd5;
+}
+.header-actions {
+  display: flex;
+  margin-left: auto;
+  flex-shrink: 0;
+  gap: 6px;
+  -webkit-app-region: no-drag;
+}
+.header-actions button {
+  font-size: 19px;
+  color: #7e9197;
+  width: 27px;
+  height: 29px;
+  border-radius: 8px;
+}
+.header-actions button:hover {
+  background: #e8f2fd;
+}
+#chat-view {
+  height: calc(100% - 73px);
+  display: flex;
+  flex-direction: column;
+}
+.messages {
+  flex: 1;
+  overflow: auto;
+  padding: 20px 18px 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbdfee transparent;
+}
+.eyebrow {
+  font-size: 8px;
+  letter-spacing: 1.8px;
+  color: #82969e;
+}
+.welcome h1 {
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -1px;
+  margin: 14px 0 9px;
+}
+.welcome p {
+  color: #82969c;
+  line-height: 1.85;
+  margin: 0;
+  font-size: 12px;
+}
+.starter-list {
+  display: flex;
+  gap: 8px;
+  margin-top: 19px;
+}
+.starter-list button {
+  border: 1px solid #d4e5f6;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 11px;
+  flex: 1;
+  text-align: left;
+  background: #f2f7fd;
+}
+.starter-list span {
+  float: right;
+  color: #6999bc;
+}
+.bubble {
+  max-width: 91%;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.75;
+  padding: 10px 13px;
+  font-size: 12px;
+  margin: 0 0 12px;
+  border-radius: 15px;
+  background: #e7f1fc;
+}
+.bubble.user {
+  width: fit-content;
+  max-width: 80%;
+  margin-left: auto;
+  padding: 8px 12px;
+  text-align: center;
+  background: #dcecff;
+  border-bottom-right-radius: 4px;
+}
+.bubble.assistant {
+  border-bottom-left-radius: 4px;
+}
+.bubble .speaker {
+  display: block;
+  font-size: 9px;
+  color: #7c929d;
+  margin-bottom: 3px;
+  letter-spacing: 1px;
+}
+.pending {
+  color: #82949c;
+  font-size: 12px;
+  letter-spacing: 4px;
+}
+.error {
+  margin: 0 16px 5px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #a45949;
+  max-height: 55px;
+  overflow: auto;
+}
+#composer {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 7px 13px 14px;
+  padding: 7px 8px 7px 12px;
+  background: #fff;
+  border: 1px solid #d8e6f5;
+  border-radius: 16px;
+}
+#message {
+  background: none;
+  resize: none;
+  border: 0;
+  outline: 0;
+  min-height: 30px;
+  max-height: 75px;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.7;
+  padding: 5px 0;
+  font-size: 12px;
+}
+#message::placeholder {
+  color: #94a4aa;
+}
+#send {
+  width: 32px;
+  height: 32px;
+  border-radius: 11px;
+  background: #5c9bd5;
+  color: #fff;
+  font-size: 22px;
+}
+#stop {
+  font-size: 11px;
+  color: #5c9bd5;
+}
+#settings-view {
+  height: calc(100% - 73px);
+  display: flex;
+  flex-direction: column;
+}
+.settings-scroll {
+  overflow: auto;
+  padding: 17px;
+}
+.settings-scroll h2 {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 9px 0;
+}
+.intro,
+.hint {
+  font-size: 10px;
+  color: #7c929a;
+  line-height: 1.65;
+}
+.settings-scroll label {
+  display: block;
+  font-size: 11px;
+  margin-top: 12px;
+}
+.settings-scroll input:not([type="checkbox"]),
+.settings-scroll textarea {
+  display: block;
+  width: 100%;
+  border: 1px solid #c4ddf8;
+  border-radius: 9px;
+  background: #f4f8ff;
+  padding: 9px;
+  margin-top: 6px;
+  color: #153b49;
+  font-size: 11px;
+  resize: vertical;
+}
+.text-button {
+  font-size: 10px;
+  color: #598db8;
+  padding: 12px 0 0;
+}
+.settings-bottom {
+  border-top: 1px solid #dceafa;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  background: #fcfcfa;
+}
+.primary {
+  background: linear-gradient(135deg, #619ed8, #5593cd);
+  color: white;
+  border-radius: 10px;
+  padding: 10px 13px;
+  font-size: 11px;
+}
+#save-note {
+  font-size: 10px;
+  color: #5c9bd5;
+}
+.pet-zone {
+  position: relative;
+  width: 152px;
+  height: 116px;
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+.pet-drag {
+  width: 108px;
+  height: 97px;
+  -webkit-app-region: no-drag;
+  padding: 0;
+  touch-action: none;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+.pet-drag:focus,
+.pet-drag:focus-visible {
+  outline: none;
+}
+.pet {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  overflow: visible;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 3px 3px #253b3d1a);
+}
+.creature {
+  animation: breathe 3.6s ease-in-out infinite;
+  transform-origin: 50% 95%;
+}
+[data-state="talking"] .pet.creature {
+  animation: xiaoba-greeting 1.2s ease-in-out infinite;
+}
+.eyes {
+  animation: blink 5.7s infinite;
+  transform-origin: 120px 105px;
+}
+.antenna {
+  transform-origin: 120px 48px;
+  animation: sway 4s ease-in-out infinite;
+}
+.arm.right {
+  transform-origin: 174px 120px;
+}
+.sparkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+[data-state="talking"] .arm.right {
+  animation: wave 0.8s ease-in-out infinite alternate;
+}
+[data-state="thinking"] .creature {
+  animation: think 2s ease-in-out infinite;
+}
+[data-state="thinking"] .sparkle {
+  animation: twinkle 0.6s infinite;
+}
+[data-state="listening"] .creature {
+  transform: rotate(-6deg);
+  animation: none;
+}
+.compact .panel {
+  display: none;
+}
+.settings-scroll select {
+  display: block;
+  width: 100%;
+  border: 1px solid #c4ddf8;
+  border-radius: 9px;
+  background: #f4f8ff;
+  padding: 9px;
+  margin-top: 6px;
+  color: #153b49;
+  font: inherit;
+}
+.gpt-account {
+  background: #e7f1fc;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 12px;
+}
+.gpt-account p { margin: 0 0 10px; overflow-wrap: anywhere; }
+.gpt-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.gpt-actions .text-button { padding: 0; }
+#gpt-note { margin: 10px 0 0; }
+@keyframes breathe {
+  50% {
+    transform: translateY(-5px) scaleY(1.015);
+  }
+}
+@keyframes blink {
+  0%,
+  43%,
+  47%,
+  100% {
+    transform: scaleY(1);
+  }
+  45% {
+    transform: scaleY(0.12);
+  }
+}
+@keyframes sway {
+  50% {
+    transform: rotate(8deg);
+  }
+}
+@keyframes twinkle {
+  50% {
+    opacity: 0.3;
+  }
+}
+@keyframes wave {
+  to {
+    transform: rotate(-23deg);
+  }
+}
+@keyframes think {
+  50% {
+    transform: rotate(4deg) translateY(-3px);
+  }
+}
+@keyframes xiaoba-greeting {
+  25% { transform: translateY(-3px) rotate(-3deg); }
+  75% { transform: translateY(-3px) rotate(3deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+  }
+}

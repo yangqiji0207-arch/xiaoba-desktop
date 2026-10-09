@@ -1,0 +1,18 @@
+node_modules/
+release/
+release-*/
+download-site/downloads/
+download-site/releases.json
+.DS_Store
+*.log
+.env
+.env.*
+
+# Local credentials and conversation data
+settings.json
+chatgpt-account.json
+chat-*.json
+*.pem
+*.key
+*.p12
+*.pfx

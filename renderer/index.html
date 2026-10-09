@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'"
+    />
+    <title>小八</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main id="app" data-state="idle">
+      <section class="panel" id="panel" aria-label="和小八聊天">
+        <header>
+          <div class="brand">
+            <span class="brand-mark"><img src="xiaoba.png" alt="" draggable="false" /></span>
+            <div>
+              <strong>小八</strong>
+              <p>
+                <i id="dot"></i><span id="connection">还差一步，就能聊天</span>
+              </p>
+            </div>
+          </div>
+          <div class="header-actions">
+            <button id="new" title="开始新对话" aria-label="开始新对话">
+              ＋</button
+            ><button id="settings" title="设置" aria-label="设置">⚙</button>
+          </div>
+        </header>
+        <div id="chat-view">
+          <div class="messages" id="messages" aria-live="polite">
+            <div class="welcome">
+              <span class="eyebrow">A LITTLE LIGHT, ALWAYS HERE</span>
+              <h1>嗨，我是小八。</h1>
+              <p>住在桌面的一点小陪伴。<br />今天，有什么想和我说的？</p>
+              <div class="starter-list">
+                <button data-prompt="你好，介绍一下自己吧">
+                  认识一下 <span>↗</span></button
+                ><button data-prompt="今天有点累，陪我聊一会儿吧">
+                  聊聊今天 <span>↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <p id="error" class="error" role="alert" hidden></p>
+          <form id="composer">
+            <textarea
+              id="message"
+              rows="1"
+              maxlength="12000"
+              placeholder="说点什么吧…"
+              aria-label="消息"
+            ></textarea
+            ><button id="send" type="submit" aria-label="发送">↑</button
+            ><button id="stop" type="button" hidden>停止</button>
+          </form>
+        </div>
+        <form id="settings-view" hidden>
+          <div class="settings-scroll">
+            <span class="eyebrow">MAKE YOURSELF AT HOME</span>
+            <h2>让我们认识一下</h2>
+            <p class="intro">
+              选择 API 或登录 ChatGPT，与小八聊天。
+            </p>
+            <label>聊天方式<select id="provider">
+              <option value="api">API 模型</option>
+              <option value="chatgpt">ChatGPT 套餐</option>
+            </select></label>
+            <div id="gpt-settings" hidden>
+              <div class="gpt-account">
+                <p id="gpt-account-name" class="hint">尚未登录 ChatGPT</p>
+                <button id="gpt-signin" type="button" class="primary">登录授权</button>
+                <div class="gpt-actions">
+                  <button id="gpt-cancel" type="button" class="text-button" hidden>取消登录</button>
+                  <button id="gpt-refresh" type="button" class="text-button" hidden>刷新模型</button>
+                  <button id="gpt-usage" type="button" class="text-button" hidden>管理额度</button>
+                  <button id="gpt-signout" type="button" class="text-button" hidden>退出登录</button>
+                </div>
+                <p id="gpt-note" class="hint" role="status"></p>
+              </div>
+              <label>ChatGPT 模型<select id="gptModel"><option value="">登录后选择模型</option></select></label>
+              <p class="hint">在浏览器中登录并授权。使用符合条件的 Plus / Pro 套餐额度，无需 API Key。</p>
+            </div>
+            <div id="api-settings">
+            <label
+              >模型密钥<input
+                id="apiKey"
+                type="password"
+                placeholder="输入你的 API Key"
+                autocomplete="off" /></label
+            >
+            <p class="hint">填写 DeepSeek 模型密钥，保存在系统加密存储中。</p>
+            <button id="clear-key" type="button" class="text-button">清除已保存的密钥</button>
+            </div>
+            <label>小八的性格<textarea id="persona" rows="3"></textarea></label
+            ><label
+              >希望小八记住的事<textarea
+                id="memory"
+                rows="3"
+                placeholder="例如：我叫小明，喜欢简短的回复。"
+              ></textarea>
+            </label>
+            <p class="hint">
+              这里的偏好会跨对话保留，可随时修改。普通聊天记录保留在对应会话中。
+            </p>
+          </div>
+          <div class="settings-bottom">
+            <span id="save-note" role="status"></span
+            ><button id="save-settings" class="primary" type="submit">保存，回到聊天 ↗</button>
+          </div>
+        </form>
+      </section>
+      <section class="pet-zone">
+        <button id="pet-toggle" class="pet-drag" type="button" title="点击打开或收起聊天，拖动移动小八" aria-label="收起聊天" aria-expanded="true">
+          <img
+            class="pet creature"
+            src="xiaoba.png"
+            alt="小八：白色身体、蓝色耳朵、粉色腮红的小猫"
+            draggable="false"
+          />
+        </button>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

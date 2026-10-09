@@ -1,0 +1,24 @@
+# 小八 is a conversation-only application. Keep the official session + agent loop.
+- id: persistent-bash
+  disabled: true
+- id: persistent-pwsh
+  disabled: true
+- id: terminal-bash
+  disabled: true
+- id: terminal-pwsh
+  disabled: true
+- id: pty
+  disabled: true
+- id: session-log-deepseek
+  disabled: true
+- id: plugin-package-inventory-deepseek
+  disabled: true
+- id: llm-deepseek
+  config:
+    streamIdleTimeoutMs: 60000
+- id: sdk-jsonrpc-server
+  disabled: true
+- insert:
+    - id: xiaoba-companion-rpc
+      name: XIAOBA_RPC_PLUGIN_PLACEHOLDER
+      inject: [sdkAppStartup, loader]

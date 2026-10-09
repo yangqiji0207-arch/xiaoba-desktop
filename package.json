@@ -1,0 +1,102 @@
+{
+  "name": "xiaoba-harness-desktop",
+  "version": "0.1.6",
+  "description": "小八 · Harness 桌面伙伴",
+  "main": "src/main.cjs",
+  "author": "小八 Desktop contributors",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.cjs",
+    "pack": "electron-builder --dir",
+    "dist:mac": "electron-builder --mac dmg zip",
+    "dist:win": "electron-builder --win nsis",
+    "test:integration": "node tests/harness.integration.cjs",
+    "prepare:download": "node scripts/prepare-download.cjs"
+  },
+  "dependencies": {
+    "@deepseek-ai/cordis-plugin-group": "1.0.4",
+    "@deepseek-ai/dsh": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-anonymous-user-id": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-attachment": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-bash-local": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-store": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-primitives": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-slots": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-compaction": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-deepseek-account": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-fs": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-hook-protocol": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-jobs": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-llm-deepseek": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-output-retention": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-ptc-runtime": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-sandbox": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-sdk-protocol": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-session-persistence": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-session-query": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-session-telemetry": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-session-title-llm": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-shell": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-spill": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-subagent-in-process-driver": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-util-time": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-util-workspace-path": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-workflow": "0.2.0-rc.2",
+    "jose": "6.2.12"
+  },
+  "devDependencies": {
+    "electron": "44.0.0",
+    "electron-builder": "^26.0.12",
+    "fflate": "0.8.3",
+    "tar": "7.5.22"
+  },
+  "build": {
+    "afterPack": "scripts/verify-runtime.cjs",
+    "appId": "com.xiaoba.desktop",
+    "productName": "小八",
+    "directories": {
+      "output": "../release-0.1.6"
+    },
+    "files": [
+      "src/**/*",
+      "renderer/**/*",
+      "harness/**/*",
+      "package.json",
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.md"
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/**/*",
+      "harness/**/*"
+    ],
+    "npmRebuild": false,
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "identity": null,
+      "icon": "renderer/xiaoba-icon.png"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "renderer/xiaoba-icon.png",
+      "signExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "artifactName": "Xiaoba-${version}-${os}-${arch}.${ext}",
+    "beforePack": "scripts/ensure-native.cjs"
+  },
+  "optionalDependencies": {
+    "node-addon-require-builtin-win32-x64-msvc": "0.1.6",
+    "@koromix/koffi-win32-x64": "3.1.1"
+  }
+}
