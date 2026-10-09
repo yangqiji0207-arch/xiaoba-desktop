@@ -35,13 +35,24 @@ jobs:
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
       - run: npm run prepare:download
+      - name: Stage installers in the workspace
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const pkg = require('./package.json');
+          const output = path.resolve(pkg.build.directories.output);
+          fs.mkdirSync('release-assets', { recursive: true });
+          for (const name of fs.readdirSync(output)) {
+            if (name.startsWith('Xiaoba-' + pkg.version + '-') && /\.(zip|dmg|exe)$/.test(name)) fs.copyFileSync(path.join(output, name), path.join('release-assets', name));
+          }
+          NODE
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
-          path: |
-            ../release-*/*.zip
-            ../release-*/*.dmg
-            ../release-*/*.exe
+          path: release-assets/*
+          compression-level: 0
           if-no-files-found: error
   publish:
     needs: build
