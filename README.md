@@ -20,7 +20,14 @@
 
 ## 下载与使用
 
-[打开小八下载网页](http://120.24.39.112/index.html)
+[下载最新版本](https://github.com/yangqiji0207-arch/xiaoba-desktop/releases/latest)
+
+| 系统 | 直接下载 |
+| --- | --- |
+| Windows x64 | [安装程序 EXE](https://github.com/yangqiji0207-arch/xiaoba-desktop/releases/download/v0.1.6/Xiaoba-0.1.6-win-x64.exe) · [ZIP 压缩包](https://github.com/yangqiji0207-arch/xiaoba-desktop/releases/download/v0.1.6/Xiaoba-0.1.6-win-x64.zip) |
+| Apple 芯片 Mac | [DMG 安装包](https://github.com/yangqiji0207-arch/xiaoba-desktop/releases/download/v0.1.6/Xiaoba-0.1.6-mac-arm64.dmg) · [ZIP 压缩包](https://github.com/yangqiji0207-arch/xiaoba-desktop/releases/download/v0.1.6/Xiaoba-0.1.6-mac-arm64.zip) |
+
+[文件校验值](https://github.com/yangqiji0207-arch/xiaoba-desktop/releases/download/v0.1.6/SHA256SUMS.txt)
 
 当前版本：**0.1.6**。
 
@@ -54,7 +61,7 @@ npm run dist:win -- --x64
 
 打包输出目录由 `package.json` 的 `build.directories.output` 控制，当前为项目旁的 `../release-0.1.6/`。
 
-`.github/workflows/build.yml` 支持手动触发以及 `v*` 标签触发，在 Mac 和 Windows 上构建安装包。构建产物保存为工作流附件，需要另行创建正式 Release 才会作为版本发布。
+`.github/workflows/build.yml` 支持手动触发以及 `v*` 标签触发，在 Mac 和 Windows 上构建安装包。两端检查和构建成功后，安装包与 SHA-256 校验文件会自动发布到 GitHub Releases。
 
 ## 如何运行
 
@@ -88,7 +95,7 @@ DeepSeek Harness 随客户端分发，不需要用户单独安装。当前固定
 | `tests/` | 单元检查、Harness 集成检查和 Windows 安装版验证 |
 | `.github/workflows/` | Mac 和 Windows 构建工作流 |
 
-`scripts/prepare-download.cjs` 将已有安装包复制到项目旁的 `../download-site/downloads/`，生成版本清单和 SHA-256 校验值。公网下载网页单独维护在该目录。
+`scripts/prepare-download.cjs` 在打包输出目录准备 Windows ZIP 和 SHA-256 校验文件，供 GitHub Releases 发布使用。安装包直接从 GitHub 下载。
 
 ## 数据说明
 

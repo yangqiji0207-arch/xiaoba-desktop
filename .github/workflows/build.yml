@@ -1,21 +1,25 @@
-name: Build desktop installers
+name: Build and publish desktop installers
 on:
   workflow_dispatch:
   push:
     tags: ['v*']
 permissions:
   contents: read
+concurrency:
+  group: desktop-release-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   build:
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: macos-15
-            command: npm run dist:mac -- --arm64
+            command: npm run dist:mac -- --arm64 --publish never
             artifact: xiaoba-mac-arm64
           - os: windows-latest
-            command: npm run dist:win -- --x64
+            command: npm run dist:win -- --x64 --publish never
             artifact: xiaoba-windows-x64
     runs-on: ${{ matrix.os }}
     steps:
@@ -30,6 +34,7 @@ jobs:
       - run: ${{ matrix.command }}
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - run: npm run prepare:download
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
@@ -38,3 +43,56 @@ jobs:
             ../release-*/*.dmg
             ../release-*/*.exe
           if-no-files-found: error
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: xiaoba-*
+          path: release-assets
+          merge-multiple: true
+      - name: Validate installers and create checksums
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const version = require('./package.json').version;
+          const dir = 'release-assets';
+          const expected = [`Xiaoba-${version}-mac-arm64.dmg`, `Xiaoba-${version}-mac-arm64.zip`, `Xiaoba-${version}-win-x64.exe`, `Xiaoba-${version}-win-x64.zip`];
+          for (const name of expected) {
+            if (!fs.existsSync(`${dir}/${name}`) || fs.statSync(`${dir}/${name}`).size < 1000000) throw Error(`Missing or invalid installer: ${name}`);
+          }
+          fs.writeFileSync(`${dir}/SHA256SUMS.txt`, expected.map(name => `${crypto.createHash('sha256').update(fs.readFileSync(`${dir}/${name}`)).digest('hex')}  ${name}`).join('\n') + '\n');
+          NODE
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+          if [ "$GITHUB_REF_TYPE" = "tag" ] && [ "$GITHUB_REF_NAME" != "$TAG" ]; then
+            echo "Tag does not match package version" >&2
+            exit 1
+          fi
+          cat > release-notes.md <<'NOTES'
+          ## 下载小八
+
+          - **Windows x64**：下载 `.exe` 安装程序，或解压 `win-x64.zip` 后运行安装程序。
+          - **Apple 芯片 Mac**：下载 `.dmg`，将「小八」拖入「应用程序」；也可以下载 `mac-arm64.zip`。
+          - `SHA256SUMS.txt` 用于核对文件完整性。
+
+          蓝色桌面聊天伙伴，支持 DeepSeek API 和 ChatGPT 登录。首次使用请在设置中填写自己的密钥或登录授权。
+
+          测试版未完成平台代码签名和 Mac 公证，系统可能提示确认来源。此版本不支持 Intel Mac。
+          NOTES
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" release-assets/* --clobber
+          else
+            gh release create "$TAG" release-assets/* --target "$GITHUB_SHA" --title "小八 $VERSION" --notes-file release-notes.md --latest
+          fi

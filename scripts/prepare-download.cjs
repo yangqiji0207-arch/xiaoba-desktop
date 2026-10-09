@@ -1,50 +1,20 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
+const { execFileSync } = require("node:child_process");
 const root = path.resolve(__dirname, "..");
 const pkg = require("../package.json");
-const from = path.resolve(root, pkg.build.directories.output);
-const site = path.join(root, "..", "download-site");
-const out = path.join(site, "downloads");
-fs.mkdirSync(out, { recursive: true });
-// Windows browsers can offer either the installer or a ZIP containing it.
-const { execFileSync } = require("node:child_process");
-const winInstaller = path.join(from, `Xiaoba-${pkg.version}-win-x64.exe`);
+const out = path.resolve(root, pkg.build.directories.output);
+const winInstaller = path.join(out, `Xiaoba-${pkg.version}-win-x64.exe`);
 if (fs.existsSync(winInstaller)) {
-  execFileSync(process.execPath, [
-    path.join(__dirname, "zip-windows.cjs"),
-    winInstaller,
-  ]);
+  execFileSync(process.execPath, [path.join(__dirname, "zip-windows.cjs"), winInstaller], { stdio: "inherit" });
 }
-const files = fs.existsSync(from)
-  ? fs
-      .readdirSync(from)
-      .filter(
-        (n) =>
-          n.startsWith(`Xiaoba-${pkg.version}-`) &&
-          /^Xiaoba-[\w.-]+\.zip$/.test(n),
-      )
+const files = fs.existsSync(out)
+  ? fs.readdirSync(out).filter(name => name.startsWith(`Xiaoba-${pkg.version}-`) && /\.(zip|dmg|exe)$/.test(name)).sort()
   : [];
-const releases = files.map((name) => {
-  const bytes = fs.readFileSync(path.join(from, name));
-  fs.writeFileSync(path.join(out, name), bytes);
-  return {
-    name,
-    url: "downloads/" + name,
-    size: bytes.length,
-    sha256: crypto.createHash("sha256").update(bytes).digest("hex"),
-  };
-});
-fs.writeFileSync(
-  path.join(site, "releases.json"),
-  JSON.stringify({ version: pkg.version, files: releases }, null, 2) + "\n",
-);
-fs.writeFileSync(
-  path.join(out, "SHA256SUMS.txt"),
-  releases.map((f) => f.sha256 + "  " + f.name).join("\n") + "\n",
-);
-fs.copyFileSync(
-  path.join(root, "renderer/xiaoba.png"),
-  path.join(site, "xiaoba.png"),
-);
-console.log(`Prepared ${releases.length} installer(s) in download-site/.`);
+if (!files.length) throw Error("No desktop installers found. Build Mac or Windows first.");
+fs.writeFileSync(path.join(out, "SHA256SUMS.txt"), files.map(name => {
+  const digest = crypto.createHash("sha256").update(fs.readFileSync(path.join(out, name))).digest("hex");
+  return `${digest}  ${name}`;
+}).join("\n") + "\n");
+console.log(`Prepared ${files.length} installer(s) and checksums for GitHub Releases.`);
